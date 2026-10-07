@@ -1,35 +1,68 @@
-# Express.js Easy Setup Guide
+# Express.js Easy Setup Guide (VS Code Terminal)
 
-A beginner-friendly guide that takes you from **installing Node.js** to running your own **Express.js** server, using the terminal (CMD) step by step. At the end, you can connect it to MySQL and run it in Docker.
+A step-by-step guide to build and run your first **Express.js** server using only the **VS Code terminal**. Follow the steps in order. At the end of Part 1, your server will be running successfully.
 
 ## Table of Contents
 
-- [1. Install Node.js](#1-install-nodejs)
-- [2. Open Your Terminal](#2-open-your-terminal)
-- [3. Create Your Project](#3-create-your-project)
-- [4. Install Express and Other Packages](#4-install-express-and-other-packages)
-- [5. Create Your First Server](#5-create-your-first-server)
-- [6. Run and Test the Server](#6-run-and-test-the-server)
-- [7. Auto-Restart on Save (nodemon)](#7-auto-restart-on-save-nodemon)
-- [8. Organize Your Code (Routes and Controllers)](#8-organize-your-code-routes-and-controllers)
-- [9. Use Environment Variables (.env)](#9-use-environment-variables-env)
-- [10. Connect to MySQL (Optional)](#10-connect-to-mysql-optional)
-- [11. What NOT to Put on GitHub](#11-what-not-to-put-on-github)
-- [12. Run It With Docker](#12-run-it-with-docker)
-- [13. Troubleshooting](#13-troubleshooting)
+- [Before You Start](#before-you-start)
+- [Part 1: Get Your Server Running](#part-1-get-your-server-running)
+  - [Step 1: Open the VS Code Terminal](#step-1-open-the-vs-code-terminal)
+  - [Step 2: Check Node.js](#step-2-check-nodejs)
+  - [Step 3: Create Your Project Folder](#step-3-create-your-project-folder)
+  - [Step 4: Create package.json](#step-4-create-packagejson)
+  - [Step 5: Install the Packages](#step-5-install-the-packages)
+  - [Step 6: Create Your Files](#step-6-create-your-files)
+  - [Step 7: Write the Server Code](#step-7-write-the-server-code)
+  - [Step 8: Add the Run Scripts](#step-8-add-the-run-scripts)
+  - [Step 9: Run the Server](#step-9-run-the-server)
+  - [Step 10: Test the Server](#step-10-test-the-server)
+  - [Step 11: Stop the Server](#step-11-stop-the-server)
+- [Part 2: Add Routes (Users API)](#part-2-add-routes-users-api)
+- [Part 3: Connect to MySQL (Optional)](#part-3-connect-to-mysql-optional)
+- [Part 4: Run It With Docker](#part-4-run-it-with-docker)
+- [Troubleshooting](#troubleshooting)
 
 ---
 
-## 1. Install Node.js
+## Before You Start
 
-Express runs on **Node.js**, so install that first.
+You need two things installed:
 
-1. Go to [nodejs.org](https://nodejs.org/)
-2. Download the **LTS** version (the stable one)
-3. Run the installer and keep clicking **Next** with the default options
-4. Restart your terminal after the install finishes
+| Tool | Download |
+| --- | --- |
+| **VS Code** | [code.visualstudio.com](https://code.visualstudio.com/) |
+| **Node.js (LTS version)** | [nodejs.org](https://nodejs.org/) |
 
-Check that it worked. Each command should print a version number:
+When installing Node.js, keep clicking **Next** with the default options. **Close and reopen VS Code** after the install finishes.
+
+> **Note:** The commands in this guide are written for the default VS Code terminal on Windows (**PowerShell**). Your terminal's name is shown at the top right of the terminal panel.
+
+---
+
+# Part 1: Get Your Server Running
+
+## Step 1: Open the VS Code Terminal
+
+Open VS Code, then open the terminal with this shortcut:
+
+```text
+Ctrl + `
+```
+
+Or use the menu: **Terminal** then **New Terminal**.
+
+Useful terminal tips:
+
+| Action | How |
+| --- | --- |
+| Open a second terminal | Click the **+** icon at the top right of the terminal panel |
+| Clear the screen | Type `cls` and press Enter |
+| Stop a running program | Press `Ctrl + C` |
+| Paste a command | Right-click inside the terminal, or press `Ctrl + V` |
+
+## Step 2: Check Node.js
+
+Each command should print a version number. If you see a version, Node.js is ready:
 
 ```bash
 node --version
@@ -39,73 +72,15 @@ node --version
 npm --version
 ```
 
-> **What is npm?** npm (Node Package Manager) comes with Node.js. It downloads and manages packages like Express.
+> **Seeing an error?** Close VS Code completely, reopen it, and try again. If it still fails, reinstall Node.js.
 
----
+## Step 3: Create Your Project Folder
 
-## 2. Open Your Terminal
-
-You can use any of these:
-
-| Terminal | How to open it |
-| --- | --- |
-| **Command Prompt (CMD)** | Press `Win + R`, type `cmd`, press Enter |
-| **PowerShell / Windows Terminal** | Press `Win + X`, then choose *Terminal* |
-| **VS Code Terminal** | Open your project in VS Code, then press `` Ctrl + ` `` |
-
-### Basic terminal commands you will need
-
-Show where you are right now:
+Go to your Documents folder:
 
 ```bash
-cd
+cd $HOME\Documents
 ```
-
-List the files in the current folder:
-
-```bash
-dir
-```
-
-Go into a folder:
-
-```bash
-cd my-project
-```
-
-Go back one folder:
-
-```bash
-cd ..
-```
-
-Create a new folder:
-
-```bash
-mkdir my-project
-```
-
-Create an empty file (CMD):
-
-```bash
-type nul > server.js
-```
-
-Clear the screen:
-
-```bash
-cls
-```
-
-Stop a running program (for example, your server):
-
-```text
-Ctrl + C
-```
-
----
-
-## 3. Create Your Project
 
 Create the project folder and go inside it:
 
@@ -114,35 +89,39 @@ mkdir my-express-app
 cd my-express-app
 ```
 
-Create the `package.json` file. This file keeps track of your project name, scripts, and installed packages:
-
-```bash
-npm init -y
-```
-
-Open the folder in VS Code:
+Open this folder in VS Code:
 
 ```bash
 code .
 ```
 
----
+A new VS Code window opens with your folder. **Use that new window from now on.** Open the terminal again with `` Ctrl + ` ``.
 
-## 4. Install Express and Other Packages
-
-Install Express:
+Check that you are inside the right folder. The path should end with `my-express-app`:
 
 ```bash
-npm install express
+pwd
 ```
 
-Install the common helper packages:
+> **If `code .` doesn't work:** In VS Code, click **File**, then **Open Folder**, and choose the `my-express-app` folder.
+
+## Step 4: Create package.json
+
+This file keeps track of your project name, scripts, and installed packages:
 
 ```bash
-npm install dotenv cors
+npm init -y
 ```
 
-Install nodemon as a **dev dependency** (it is only used while you code):
+## Step 5: Install the Packages
+
+Install Express and the helper packages:
+
+```bash
+npm install express dotenv cors
+```
+
+Install nodemon as a dev dependency (it restarts your server when you save a file):
 
 ```bash
 npm install --save-dev nodemon
@@ -155,23 +134,23 @@ npm install --save-dev nodemon
 | `cors` | Lets your frontend (for example React) talk to your backend |
 | `nodemon` | Restarts your server automatically when you save a file |
 
-See what is installed:
+## Step 6: Create Your Files
+
+Create all three files with one command:
 
 ```bash
-npm list --depth=0
+New-Item server.js, .env, .gitignore -ItemType File
 ```
 
----
+You should now see `server.js`, `.env`, and `.gitignore` in the VS Code file list on the left.
 
-## 5. Create Your First Server
+> **Not using PowerShell?** If your terminal says `cmd`, use `type nul > server.js` for each file. If it says `bash`, use `touch server.js .env .gitignore`.
 
-Create the file:
+## Step 7: Write the Server Code
 
-```bash
-type nul > server.js
-```
+Click each file in the VS Code file list on the left, and paste the content below.
 
-Open `server.js` and paste this:
+### server.js
 
 ```js
 require("dotenv").config();
@@ -210,81 +189,166 @@ app.listen(PORT, () => {
 });
 ```
 
-Open `package.json` and set up the scripts:
+### .env
+
+```env
+PORT=3000
+```
+
+### .gitignore
+
+```gitignore
+# Hide the giant folder of downloaded packages
+node_modules/
+
+# Hide secret passwords and database usernames
+.env
+```
+
+Press `Ctrl + S` on each file to save it.
+
+## Step 8: Add the Run Scripts
+
+Open `package.json` in VS Code. Find the `"scripts"` section and replace it with this:
 
 ```json
 "scripts": {
   "dev": "nodemon server.js",
   "start": "node server.js"
+},
+```
+
+Your `package.json` should look similar to this (the version numbers may be different):
+
+```json
+{
+  "name": "my-express-app",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^5.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
 }
 ```
 
----
+> **Important:** Don't change the `dependencies` and `devDependencies` that npm created for you. Only replace the `"scripts"` part and make sure `"main"` is `"server.js"`. Save with `Ctrl + S`.
 
-## 6. Run and Test the Server
+## Step 9: Run the Server
 
-Start the server:
-
-```bash
-node server.js
-```
-
-You should see:
-
-```text
-Server running on http://localhost:3000
-```
-
-Test it in your browser by opening these links:
-
-- `http://localhost:3000`
-- `http://localhost:3000/api/health`
-
-Or test it from a second terminal window:
-
-```bash
-curl http://localhost:3000/api/health
-```
-
-Press `Ctrl + C` in the first terminal to stop the server.
-
----
-
-## 7. Auto-Restart on Save (nodemon)
-
-Without nodemon, you have to stop and start the server every time you change your code. With nodemon, it restarts by itself when you press **Save**.
-
-Run your server in development mode:
+Start the server in development mode:
 
 ```bash
 npm run dev
 ```
 
-Now change something in `server.js` and save. You will see:
+You should see this:
+
+```text
+[nodemon] starting `node server.js`
+Server running on http://localhost:3000
+```
+
+**Your server is running.** Leave this terminal open. If you close it, the server stops.
+
+## Step 10: Test the Server
+
+### Test in your browser
+
+Open these links:
+
+- `http://localhost:3000` should show `Express server is running!`
+- `http://localhost:3000/api/health` should show `{"status":"ok"}`
+
+### Test in a second terminal
+
+Click the **+** icon in the terminal panel to open a second terminal, then run:
+
+```bash
+Invoke-RestMethod http://localhost:3000/api/health
+```
+
+You should see:
+
+```text
+status
+------
+ok
+```
+
+### Test auto-restart
+
+With the server still running, open `server.js`, change the text `Express server is running!` to `Hello from Express!`, and press `Ctrl + S`. In the first terminal you will see:
 
 ```text
 [nodemon] restarting due to changes...
 [nodemon] starting `node server.js`
+Server running on http://localhost:3000
 ```
 
-Run your server in normal (production) mode:
+Refresh `http://localhost:3000` in your browser to see the new text.
+
+## Step 11: Stop the Server
+
+Click inside the terminal that is running the server and press:
+
+```text
+Ctrl + C
+```
+
+If it asks `Terminate batch job (Y/N)?`, type `Y` and press Enter.
+
+Run the server again anytime with:
+
+```bash
+npm run dev
+```
+
+Run it in normal (production) mode, without auto-restart:
 
 ```bash
 npm start
 ```
 
-> **Using Docker on Windows?** Use `nodemon -L server.js` in your `dev` script so file changes are detected inside the container. See the [Docker guide](https://github.com/kyroijijadas/docker-nodejs-setup-guide).
+## Part 1 Checklist
+
+- [ ] `node --version` shows a version number
+- [ ] `npm run dev` shows `Server running on http://localhost:3000`
+- [ ] The browser shows `Express server is running!`
+- [ ] Saving `server.js` makes nodemon restart by itself
+
+If all four are checked, your Express server is set up successfully.
 
 ---
 
-## 8. Organize Your Code (Routes and Controllers)
+# Part 2: Add Routes (Users API)
 
-When your project grows, don't put everything in `server.js`. Split it into folders:
+When your project grows, split your code into folders instead of putting everything in `server.js`.
+
+Create the folders:
+
+```bash
+mkdir routes, controllers
+```
+
+Create the files:
+
+```bash
+New-Item routes\users.routes.js, controllers\users.controller.js -ItemType File
+```
+
+Your project now looks like this:
 
 ```text
 my-express-app/
-├── config/
-│   └── db.js
 ├── controllers/
 │   └── users.controller.js
 ├── routes/
@@ -293,19 +357,6 @@ my-express-app/
 ├── .gitignore
 ├── package.json
 └── server.js
-```
-
-Create the folders:
-
-```bash
-mkdir config controllers routes
-```
-
-Create the files:
-
-```bash
-type nul > routes\users.routes.js
-type nul > controllers\users.controller.js
 ```
 
 ### controllers/users.controller.js
@@ -367,79 +418,47 @@ module.exports = router;
 
 ### Connect the routes in server.js
 
-Add this line near the top, below the other `require` lines:
+Add this line below the other `require` lines at the top:
 
 ```js
 const usersRoutes = require("./routes/users.routes");
 ```
 
-Add this line below `app.use(express.json());`, before the 404 handler:
+Add this line below `app.use(express.json());`:
 
 ```js
 app.use("/api/users", usersRoutes);
 ```
 
-### Test your routes
+Save the file. nodemon restarts the server for you. Open a second terminal and test:
 
 Get all users:
 
 ```bash
-curl http://localhost:3000/api/users
+Invoke-RestMethod http://localhost:3000/api/users
 ```
 
 Get one user:
 
 ```bash
-curl http://localhost:3000/api/users/1
+Invoke-RestMethod http://localhost:3000/api/users/1
 ```
 
-Create a user (CMD needs the quotes escaped like this):
+Create a user:
 
 ```bash
-curl -X POST http://localhost:3000/api/users -H "Content-Type: application/json" -d "{\"name\":\"Carl\"}"
+Invoke-RestMethod -Method Post -Uri http://localhost:3000/api/users -ContentType "application/json" -Body '{"name":"Carl"}'
 ```
 
 Delete a user:
 
 ```bash
-curl -X DELETE http://localhost:3000/api/users/1
+Invoke-RestMethod -Method Delete -Uri http://localhost:3000/api/users/1
 ```
 
 ---
 
-## 9. Use Environment Variables (.env)
-
-Never write passwords directly in your code. Put them in a `.env` file instead.
-
-Create the file:
-
-```bash
-type nul > .env
-```
-
-Add this inside:
-
-```env
-PORT=3000
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=change_this_password
-DB_NAME=mydatabase
-```
-
-Your code reads them with `process.env`:
-
-```js
-const PORT = process.env.PORT || 3000;
-```
-
-Make sure `require("dotenv").config();` is the **first line** of `server.js`.
-
-> **Using Docker?** Inside Docker, set `DB_HOST=db` (the service name of your database) instead of `localhost`.
-
----
-
-## 10. Connect to MySQL (Optional)
+# Part 3: Connect to MySQL (Optional)
 
 Install the MySQL package:
 
@@ -447,10 +466,11 @@ Install the MySQL package:
 npm install mysql2
 ```
 
-Create the file:
+Create the config folder and file:
 
 ```bash
-type nul > config\db.js
+mkdir config
+New-Item config\db.js -ItemType File
 ```
 
 ### config/db.js
@@ -461,7 +481,7 @@ const mysql = require("mysql2/promise");
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD || process.env.DB_ROOT_PASSWORD,
+  password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   waitForConnections: true,
   connectionLimit: 10,
@@ -469,6 +489,18 @@ const pool = mysql.createPool({
 
 module.exports = pool;
 ```
+
+### Add the database settings to .env
+
+```env
+PORT=3000
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=change_this_password
+DB_NAME=mydatabase
+```
+
+> **Using Docker?** Inside Docker, set `DB_HOST=db` (the service name of your database) instead of `localhost`.
 
 ### Create a table
 
@@ -481,7 +513,7 @@ CREATE TABLE IF NOT EXISTS users (
 );
 ```
 
-### Example: get users from the database
+### Get users from the database
 
 Replace `getUsers` in `controllers/users.controller.js` with this:
 
@@ -498,7 +530,7 @@ exports.getUsers = async (req, res, next) => {
 };
 ```
 
-### Test the connection on startup
+### Check the connection on startup
 
 Add this to `server.js`, above `app.listen`:
 
@@ -518,45 +550,15 @@ db.query("SELECT 1")
 
 ---
 
-## 11. What NOT to Put on GitHub
+# Part 4: Run It With Docker
 
-Create a file named exactly `.gitignore`:
-
-```bash
-type nul > .gitignore
-```
-
-Put this inside:
-
-```gitignore
-# Hide the giant folder of downloaded packages
-node_modules/
-
-# Hide secret passwords and database usernames
-.env
-```
-
-Anyone who downloads your project can recreate `node_modules` by running:
+Once your Express app works, you can run it in a container. Create the files:
 
 ```bash
-npm install
+New-Item Dockerfile, .dockerignore -ItemType File
 ```
 
-Already pushed `.env` or `node_modules` by mistake? Remove them from Git tracking (this keeps the files on your computer):
-
-```bash
-git rm -r --cached node_modules
-git rm --cached .env
-git commit -m "Stop tracking node_modules and .env"
-```
-
-> **Note:** If you ever pushed real passwords to GitHub, change them. Deleting the file does not remove it from your Git history.
-
----
-
-## 12. Run It With Docker
-
-Once your Express app works, you can run it in a container. Create `Dockerfile` in your project folder:
+### Dockerfile
 
 ```dockerfile
 FROM node:20-alpine
@@ -573,7 +575,7 @@ EXPOSE 3000
 CMD ["npm", "run", "dev"]
 ```
 
-Create `.dockerignore`:
+### .dockerignore
 
 ```text
 node_modules
@@ -582,7 +584,7 @@ npm-debug.log
 .git
 ```
 
-Build and run it:
+Build and run it (Docker Desktop must be running):
 
 ```bash
 docker build -t my-express-app .
@@ -592,26 +594,35 @@ docker build -t my-express-app .
 docker run -p 3000:3000 --env-file .env my-express-app
 ```
 
+> **Using Docker on Windows?** Change your `dev` script to `nodemon -L server.js` so file changes are detected inside the container.
+
 For the full setup with MySQL, `docker-compose.yml`, and live-sync, follow the [Docker & Node.js Easy Setup Guide](https://github.com/kyroijijadas/docker-nodejs-setup-guide).
 
 ---
 
-## 13. Troubleshooting
+# Troubleshooting
 
 | Problem | Fix |
 | --- | --- |
-| `'node' is not recognized` | Node.js isn't installed or the terminal was open during install. Close and reopen your terminal. |
-| `'npm' is not recognized` | Same as above. Reinstall Node.js from [nodejs.org](https://nodejs.org/). |
-| `Cannot find module 'express'` | Run `npm install` in your project folder. |
-| `EADDRINUSE: address already in use :::3000` | Another program is using port 3000. Stop it, or change `PORT` in `.env`. |
+| `'node' is not recognized` | Close VS Code completely and reopen it. If it still fails, reinstall Node.js. |
+| `running scripts is disabled on this system` | PowerShell is blocking npm. Run the command below this table, then try again. |
+| `code .` doesn't work | In VS Code, click **File**, then **Open Folder**, and choose your project folder. |
+| `Cannot find module 'express'` | Make sure you are in the project folder, then run `npm install`. |
+| `Missing script: "dev"` | Your `package.json` doesn't have the scripts from Step 8, or you are in the wrong folder. |
+| `EADDRINUSE: address already in use :::3000` | Another program is using port 3000. Stop it (see below), or change `PORT` in `.env`. |
 | `Cannot GET /something` | That route doesn't exist. Check the URL and your route files. |
 | `req.body` is `undefined` | Add `app.use(express.json());` **above** your routes. |
-| Frontend gets a CORS error | Add `app.use(cors());` in `server.js` and run `npm install cors`. |
+| Frontend gets a CORS error | Make sure `app.use(cors());` is in `server.js`. |
 | `.env` values are `undefined` | Make sure `require("dotenv").config();` is the first line of `server.js`, and the file is named exactly `.env`. |
 | `ECONNREFUSED` when connecting to MySQL | MySQL isn't running, or `DB_HOST` is wrong. Use `localhost` on your computer and `db` inside Docker. |
-| `nodemon` is not recognized | Run `npm install --save-dev nodemon`, then start with `npm run dev` (not `nodemon` directly). |
 
-Find which program is using port 3000 on Windows:
+Fix for `running scripts is disabled on this system` (run once, then close and reopen the terminal):
+
+```bash
+Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+```
+
+Find which program is using port 3000:
 
 ```bash
 netstat -ano | findstr :3000
